@@ -1,6 +1,7 @@
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
 const { Boom } = require('@hapi/boom');
 const path = require('path');
+const qrcode = require('qrcode-terminal');
 
 async function listGroups(sock) {
     try {
@@ -21,45 +22,41 @@ async function listGroups(sock) {
 }
 
 async function startWhatsApp() {
-    // Load auth info
-    const { state, saveCreds } = await useMultiFileAuthState(
-        path.join(__dirname, '../auth_info')
-    );
-
+    // Use auth state
+    const { state, saveCreds } = await useMultiFileAuthState('auth_info');
+    
     const sock = makeWASocket({
         printQRInTerminal: true,
         auth: state,
-        defaultQueryTimeoutMs: undefined
+        // Browser identification
+        browser: ['Ulutek Menu Bot', 'Chrome', '1.0.0']
     });
 
-    // Return a promise that resolves when connection is established
-    return new Promise((resolve, reject) => {
-        // Handle connection events
-        sock.ev.on('connection.update', async (update) => {
-            const { connection, lastDisconnect } = update;
+    // Save credentials whenever updated
+    sock.ev.on('creds.update', saveCreds);
 
-            if (connection === 'close') {
-                const shouldReconnect = 
-                    (lastDisconnect?.error instanceof Boom)?.output?.statusCode !== DisconnectReason.loggedOut;
-
-                console.log('Connection closed due to:', lastDisconnect?.error, 'Reconnecting:', shouldReconnect);
-
-                if (shouldReconnect) {
-                    startWhatsApp().then(resolve).catch(reject);
-                } else {
-                    reject(lastDisconnect?.error || new Error('Connection closed'));
-                }
-            } else if (connection === 'open') {
-                console.log('WhatsApp connection established!');
-                // List available groups after successful connection
-                await listGroups(sock);
-                resolve(sock);
+    // Handle connection updates
+    sock.ev.on('connection.update', async (update) => {
+        const { connection, lastDisconnect } = update;
+        
+        if (connection === 'close') {
+            const shouldReconnect = (lastDisconnect?.error instanceof Boom)? 
+                lastDisconnect.error?.output?.statusCode !== DisconnectReason.loggedOut
+                : true;
+            
+            console.log('Connection closed due to ', lastDisconnect?.error, ', reconnecting ', shouldReconnect);
+            
+            if (shouldReconnect) {
+                await startWhatsApp();
             }
-        });
-
-        // Save credentials on update
-        sock.ev.on('creds.update', saveCreds);
+        } else if (connection === 'open') {
+            console.log('WhatsApp connection opened!');
+            // List available groups after successful connection
+            await listGroups(sock);
+        }
     });
+
+    return sock;
 }
 
-module.exports = { startWhatsApp }; 
+module.exports = { startWhatsApp };

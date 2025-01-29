@@ -1,92 +1,87 @@
-# Ulutek Menu WhatsApp Bot
+# Ulutek Menu Bot
 
-A Node.js application that scrapes the daily menu from Ulutek Teknopark's website and automatically sends it to a WhatsApp group using the Baileys WhatsApp Web API.
+A WhatsApp bot that automatically fetches and sends the daily menu from Ulutek's website to a specified WhatsApp group.
 
 ## Features
 
-- 🍽️ Scrapes daily menu from [Ulutek Teknopark's website](https://ulutek.com.tr/yemek-liste)
-- 📱 Automatically sends menu to WhatsApp group
-- 🕒 Scheduled daily notifications
-- 📊 Includes calorie information for each meal
-- 🗓️ Supports weekly menu viewing
+- 🔄 Automatically fetches daily menu from Ulutek's website
+- 📱 Sends menu to a specified WhatsApp group
+- 🔌 Persistent WhatsApp connection (only need to scan QR code once)
+- 🚀 Auto-startup with Windows
+- 📅 Shows menu items with calories
+- 🔄 Auto-reconnect on connection loss
 
-## Prerequisites
+## Setup Instructions
 
-- Node.js (v14 or higher)
-- npm or yarn
-- A WhatsApp account for the bot
-- Chrome/Chromium (for web scraping)
+### Prerequisites
 
-## Installation
+1. Node.js installed on your computer
+2. A WhatsApp account
+3. Member of the target WhatsApp group
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/ulutek-menu-bot.git
-cd ulutek-menu-bot
-```
+### Installation
 
-2. Install dependencies:
-```bash
-npm install
-```
+1. Clone or download this repository
+2. Navigate to the project directory
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-3. Create a `.env` file in the root directory:
-```env
-GROUP_JID=your_whatsapp_group_jid
-SCHEDULE_TIME=09:00 # Time to send menu notification
-```
+### Configuration
 
-## Dependencies
+1. Create a `.env` file in the project root
+2. Start the bot for the first time:
+   ```bash
+   npm start
+   ```
+3. Scan the QR code with WhatsApp (only needed once)
+4. The bot will display a list of available WhatsApp groups
+5. Copy the Group JID of your desired group
+6. Add the Group JID to your `.env` file:
+   ```
+   GROUP_JID="your-group-jid-here"
+   ```
 
-- [@whiskeysockets/baileys](https://github.com/WhiskeySockets/Baileys) - WhatsApp Web API
-- puppeteer - Web scraping
-- node-schedule - Task scheduling
-- dotenv - Environment configuration
+### Auto-Start Setup
 
-## Usage
+1. The `start-bot.bat` file is included in the project
+2. To enable auto-start:
+   - Press `Windows + R`
+   - Type `shell:startup`
+   - Copy `start-bot.bat` from the project folder
+   - Paste it into the startup folder
 
-1. Start the bot:
-```bash
-npm start
-```
+## How It Works
 
-2. Scan the QR code with WhatsApp to authenticate
+- The bot connects to WhatsApp using your account
+- It scrapes the Ulutek website daily for the menu
+- Formats the menu with emojis and calorie information
+- Sends it to the configured WhatsApp group
+- The connection is persistent (saved in `auth_info` folder)
 
-The bot will automatically:
-- Scrape the menu at scheduled times
-- Format the menu data
-- Send it to the configured WhatsApp group
+## Troubleshooting
 
-## Menu Format
+- If the bot disconnects, it will automatically try to reconnect
+- If you need to rescan the QR code:
+  1. Delete the `auth_info` folder
+  2. Restart the bot
+- If the menu isn't being sent:
+  1. Check your internet connection
+  2. Verify the GROUP_JID in .env file
+  3. Ensure you're still a member of the group
 
-The bot sends messages in the following format:
+## Notes
 
-```
-📅 [Day's Date]
-🍽️ Today's Menu:
-
-🥣 Soup: [Soup Name] ([Calories] kcal)
-🍖 Main: [Main Course] ([Calories] kcal)
-🥗 Side: [Side Dish] ([Calories] kcal)
-🍚 Other: [Other Items] ([Calories] kcal)
-🍰 Dessert: [Dessert Name] ([Calories] kcal)
-
-Total Calories: [Total] kcal
-```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- [Ulutek Teknopark](https://ulutek.com.tr) for providing the menu data
-- [WhiskeySockets/Baileys](https://github.com/WhiskeySockets/Baileys) for the WhatsApp Web API
+- The bot saves authentication state in the `auth_info` folder
+- You typically only need to scan the QR code once
+- The bot will automatically start with Windows if configured
+- Menu is fetched from: https://ulutek.com.tr/yemek-liste
 
 ## Support
 
-For support, please open an issue in the GitHub repository or contact the maintainers. 
+If you encounter any issues or need help, please:
+1. Check the troubleshooting section
+2. Verify your configuration
+3. Ensure all dependencies are installed
+4. Check the console output for error messages 
