@@ -1,0 +1,26 @@
+{
+  "name": "ulutek-menu-bot",
+  "version": "1.0.0",
+  "description": "A Node.js application that scrapes the daily menu from Ulutek Teknopark's website and automatically sends it to a WhatsApp group using the Baileys WhatsApp Web API.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "menu",
+    "scraper",
+    "ulutek"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.0",
+    "@hapi/boom": "^10.0.0",
+    "dotenv": "^16.0.3",
+    "node-schedule": "^2.1.1",
+    "puppeteer": "^19.8.0"
+  }
+}
