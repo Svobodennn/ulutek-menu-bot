@@ -2,7 +2,7 @@
 
 A WhatsApp bot that automatically fetches and sends the daily menu from Ulutek's website to a specified WhatsApp group.
 
-## Features
+## 🌟 Features
 
 - 🔄 Automatically fetches daily menu from Ulutek's website
 - 📱 Sends menu to a specified WhatsApp group
@@ -10,8 +10,25 @@ A WhatsApp bot that automatically fetches and sends the daily menu from Ulutek's
 - 🚀 Auto-startup with Windows
 - 📅 Shows menu items with calories
 - 🔄 Auto-reconnect on connection loss
+- ⏰ Scheduled sending at 9:00 AM on weekdays
+- 📊 Calorie tracking for each item
 
-## Setup Instructions
+## 📋 Example Menu Format
+
+```
+📅 Pazartesi, 29 Ocak 2024
+🍽️ Today's Menu:
+
+🥣 Fesleğenli Domates Çorba (161 kcal)
+🍖 Etli Ali Nazik (315 kcal)
+🥗 Tavuklu Sultan Kebabı (390 kcal)
+🍚 Arpa Şehriye Pilavı (456 kcal)
+🍰 Tatlı Günü (0 kcal)
+
+Total Calories: 1322 kcal
+```
+
+## 🛠️ Setup Instructions
 
 ### Prerequisites
 
@@ -19,7 +36,7 @@ A WhatsApp bot that automatically fetches and sends the daily menu from Ulutek's
 2. A WhatsApp account
 3. Member of the target WhatsApp group
 
-### Installation
+### 📥 Installation
 
 1. Clone or download this repository
 2. Navigate to the project directory
@@ -28,60 +45,94 @@ A WhatsApp bot that automatically fetches and sends the daily menu from Ulutek's
    npm install
    ```
 
-### Configuration
+### ⚙️ Configuration
 
-1. Create a `.env` file in the project root
+1. Create a `.env` file in the project root:
+   ```env
+   GROUP_JID="your-group-jid-here"
+   SCHEDULE_TIME="09:00"
+   ```
+
 2. Start the bot for the first time:
    ```bash
    npm start
    ```
-3. Scan the QR code with WhatsApp (only needed once)
-4. The bot will display a list of available WhatsApp groups
-5. Copy the Group JID of your desired group
-6. Add the Group JID to your `.env` file:
+
+3. Scan the QR code that appears in terminal:
    ```
-   GROUP_JID="your-group-jid-here"
+   ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+   █ ▄▄▄▄▄ █▀█ █▄█▄█ ▄▄▄▄▄ █
+   █ █   █ █▀▀▀█ ▀█ █   █ █
+   █ █▄▄▄█ █▀ █▀▀█ █▄▄▄█ █
+   █▄▄▄▄▄▄▄█▄▀ ▀▄█▄▄▄▄▄▄▄█
+   ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
    ```
 
-### Auto-Start Setup
+4. The bot will show available groups:
+   ```
+   Available WhatsApp Groups:
+   ============================
+   Group Name: Ulutek Yemek
+   Group JID: 123456789-123456@g.us
+   ----------------------------
+   ```
+
+5. Copy your group's JID to the `.env` file
+
+### 🚀 Auto-Start Setup
 
 1. The `start-bot.bat` file is included in the project
 2. To enable auto-start:
-   - Press `Windows + R`
-   - Type `shell:startup`
-   - Copy `start-bot.bat` from the project folder
-   - Paste it into the startup folder
+   ```
+   Windows + R → shell:startup → Copy start-bot.bat here
+   ```
 
-## How It Works
+## 📊 How It Works
 
-- The bot connects to WhatsApp using your account
-- It scrapes the Ulutek website daily for the menu
-- Formats the menu with emojis and calorie information
-- Sends it to the configured WhatsApp group
-- The connection is persistent (saved in `auth_info` folder)
+```mermaid
+graph TD
+    A[Start Bot] --> B{Check Auth}
+    B -->|First Time| C[Show QR Code]
+    B -->|Already Authenticated| D[Connect to WhatsApp]
+    C --> D
+    D --> E[Schedule Daily Job]
+    E --> F[Wait for 9:00 AM]
+    F --> G[Scrape Menu]
+    G --> H[Format Message]
+    H --> I[Send to Group]
+    I --> F
+```
 
-## Troubleshooting
+## 🔍 Troubleshooting
 
-- If the bot disconnects, it will automatically try to reconnect
-- If you need to rescan the QR code:
-  1. Delete the `auth_info` folder
-  2. Restart the bot
-- If the menu isn't being sent:
-  1. Check your internet connection
-  2. Verify the GROUP_JID in .env file
-  3. Ensure you're still a member of the group
+Common issues and solutions:
 
-## Notes
+| Issue | Solution |
+|-------|----------|
+| Bot disconnects | Will auto-reconnect |
+| Need new QR code | Delete `auth_info` folder & restart |
+| Menu not sending | Check GROUP_JID in .env |
+| No menu found | Verify internet connection |
 
-- The bot saves authentication state in the `auth_info` folder
-- You typically only need to scan the QR code once
-- The bot will automatically start with Windows if configured
-- Menu is fetched from: https://ulutek.com.tr/yemek-liste
+## 📝 Notes
 
-## Support
+- 💾 Auth state saved in `auth_info` folder
+- 🔄 Only scan QR once unless logged out
+- 🚀 Auto-starts with Windows if configured
+- 🔗 Menu source: https://ulutek.com.tr/yemek-liste
 
-If you encounter any issues or need help, please:
-1. Check the troubleshooting section
-2. Verify your configuration
-3. Ensure all dependencies are installed
-4. Check the console output for error messages 
+## 🆘 Support
+
+If you encounter any issues:
+1. 📋 Check troubleshooting section
+2. ⚙️ Verify configuration
+3. 📦 Check dependencies
+4. 📜 Review console logs
+
+## 🕒 Schedule Details
+
+- ⏰ Runs every weekday at 9:00 AM
+- 🚫 Skips weekends automatically
+- 🔄 Updates menu daily
+- 📅 Handles month transitions
+- 🔌 Maintains persistent connection 
