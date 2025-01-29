@@ -8,19 +8,21 @@ function setupScheduler(whatsappClient) {
             console.log('Scheduled job running: Fetching and sending menu...');
             const menuMessage = await scrapeMenu();
             
-            if (menuMessage) {
-                await whatsappClient.sendMessage(
+            if (menuMessage && process.env.GROUP_JID) {
+                await whatsappClient.sendAndPinMessage(
                     process.env.GROUP_JID,
-                    { text: menuMessage }
+                    menuMessage
                 );
-                console.log('Menu sent successfully!');
+                console.log('Menu sent and pinned successfully!');
+            } else {
+                console.log('Could not send menu:', !menuMessage ? 'No menu available' : 'No GROUP_JID configured');
             }
         } catch (error) {
             console.error('Error in scheduled job:', error);
         }
     });
 
-    console.log('Scheduler setup complete. Menu will be sent at 9:00 AM on weekdays.');
+    console.log('Scheduler setup complete. Menu will be sent and pinned at 9:00 AM on weekdays.');
     return job;
 }
 

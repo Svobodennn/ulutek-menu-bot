@@ -21,6 +21,27 @@ async function listGroups(sock) {
     }
 }
 
+async function sendAndPinMessage(sock, jid, message) {
+    try {
+        // Send the message
+        const sentMessage = await sock.sendMessage(jid, { text: message });
+        console.log('Message sent successfully');
+
+        // Pin the message
+        try {
+            await sock.groupSettingUpdate(jid, 'announcement');
+            console.log('Message pinned successfully');
+        } catch (pinError) {
+            console.log('Could not pin message:', pinError);
+        }
+
+        return sentMessage;
+    } catch (error) {
+        console.error('Error sending/pinning message:', error);
+        throw error;
+    }
+}
+
 async function startWhatsApp() {
     // Use auth state
     const { state, saveCreds } = await useMultiFileAuthState('auth_info');
@@ -59,4 +80,4 @@ async function startWhatsApp() {
     return sock;
 }
 
-module.exports = { startWhatsApp };
+module.exports = { startWhatsApp, sendAndPinMessage };

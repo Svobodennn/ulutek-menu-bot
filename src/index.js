@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { startWhatsApp } = require('./whatsapp');
+const { startWhatsApp, sendAndPinMessage } = require('./whatsapp');
 const { setupScheduler } = require('./scheduler');
 const { scrapeMenu } = require('./scraper');
 
@@ -20,11 +20,12 @@ async function main() {
         
         if (todayMenu && process.env.GROUP_JID) {
             console.log('Sending menu to group...');
-            await whatsappClient.sendMessage(
+            await sendAndPinMessage(
+                whatsappClient,
                 process.env.GROUP_JID,
-                { text: todayMenu }
+                todayMenu
             );
-            console.log('Menu sent successfully!');
+            console.log('Menu sent and pinned successfully!');
         } else {
             console.log('Could not send menu:', !todayMenu ? 'No menu available' : 'No GROUP_JID configured');
         }
