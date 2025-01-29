@@ -88,13 +88,27 @@ async function scrapeMenu() {
                 return null;
             }
 
-            // Find the cell with today's date (29)
+            // Get today's date
+            const today = new Date();
+            const currentDate = today.getDate().toString();
+            console.log(`Looking for date: ${currentDate}`);
+
+            // Find the cell with today's date
             const dateCell = Array.from(table.querySelectorAll('td')).find(
-                cell => cell.textContent.trim() === '29'
+                cell => {
+                    const text = cell.textContent.trim();
+                    // Match exact date number
+                    return text === currentDate;
+                }
             );
 
             if (!dateCell) {
                 console.log('Could not find today\'s date cell');
+                // Check if we're at month boundary
+                const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+                if (today.getDate() === lastDayOfMonth) {
+                    console.log('End of month detected, menu might be in next month\'s table');
+                }
                 return null;
             }
 
